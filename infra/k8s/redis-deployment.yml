@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hms-redis
+  namespace: hms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hms-redis
+  template:
+    metadata:
+      labels:
+        app: hms-redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:7-alpine
+          ports:
+            - containerPort: 6379

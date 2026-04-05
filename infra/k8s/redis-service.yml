@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hms-redis
+  namespace: hms
+spec:
+  selector:
+    app: hms-redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379

@@ -1,0 +1,211 @@
+openapi: 3.0.3
+info:
+  title: HMS API
+  version: 1.0.0
+  description: Production-ready Hospital Management System API.
+servers:
+  - url: /api/v1
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: Service status
+  /metrics:
+    get:
+      summary: Runtime metrics snapshot
+      responses:
+        '200':
+          description: Metrics payload
+  /auth/register:
+    post:
+      summary: Register and send OTP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password, role]
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                role:
+                  type: string
+                  enum: [admin, doctor, patient]
+      responses:
+        '200':
+          description: OTP sent
+  /auth/verify-otp:
+    post:
+      summary: Verify OTP and activate account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, otp]
+              properties:
+                email:
+                  type: string
+                otp:
+                  type: string
+      responses:
+        '200':
+          description: Account verified
+  /auth/login:
+    post:
+      summary: Authenticate user
+      responses:
+        '200':
+          description: Login successful
+  /auth/refresh:
+    post:
+      summary: Rotate refresh token
+      responses:
+        '200':
+          description: New tokens issued
+  /auth/me:
+    get:
+      summary: Current authenticated user profile
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Profile
+  /appointments:
+    get:
+      summary: List appointments
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Paginated list
+    post:
+      summary: Book appointment
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: Created
+  /appointments/availability:
+    get:
+      summary: Doctor slot availability
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Availability list
+  /appointments/reschedule:
+    patch:
+      summary: Reschedule appointment
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Updated appointment
+  /appointments/cancel:
+    patch:
+      summary: Cancel appointment
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Cancelled appointment
+  /prescriptions:
+    get:
+      summary: List prescriptions
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Prescriptions list
+    post:
+      summary: Create prescription
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: Created prescription
+  /billing:
+    get:
+      summary: List invoices
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Invoices list
+    post:
+      summary: Create invoice
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: Created invoice
+  /reports:
+    get:
+      summary: List reports
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Reports list
+  /reports/upload:
+    post:
+      summary: Upload report document
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Uploaded
+  /analytics/admin:
+    get:
+      summary: Admin analytics dashboard data
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Aggregated admin analytics
+  /analytics/doctor:
+    get:
+      summary: Doctor analytics dashboard data
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Aggregated doctor analytics

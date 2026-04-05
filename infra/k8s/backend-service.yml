@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hms-backend
+  namespace: hms
+spec:
+  selector:
+    app: hms-backend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
