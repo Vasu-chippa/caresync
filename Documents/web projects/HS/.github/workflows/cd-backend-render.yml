@@ -1,0 +1,10 @@
+name: Deploy Backend Render
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Configure Render deploy hook in next phase."

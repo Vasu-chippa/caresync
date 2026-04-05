@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hms-config
+  namespace: hms
+data:
+  NODE_ENV: production
