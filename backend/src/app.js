@@ -28,6 +28,17 @@ app.use('/uploads', express.static(path.resolve(process.cwd(), 'uploads')));
 
 app.use('/api/v1', router);
 
+app.get('/', (_req, res) => {
+	res.status(200).json({
+		success: true,
+		message: 'CareSyncr backend is running',
+		data: {
+			docs: '/api/v1/docs',
+			health: '/api/v1/health',
+		},
+	});
+});
+
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);
 
