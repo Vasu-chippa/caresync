@@ -1,4 +1,4 @@
-# CareSyncr - Healthcare Management Platform
+# CareSync - Healthcare Management Platform
 
 A comprehensive, modern healthcare management system designed for seamless patient care, clinical workflows, and hospital operations with real-time analytics and secure data management.
 
