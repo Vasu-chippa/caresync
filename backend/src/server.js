@@ -16,7 +16,7 @@ const startServer = async () => {
     const server = http.createServer(app);
     const io = new SocketIOServer(server, {
       cors: {
-        origin: env.CLIENT_URL,
+        origin: env.CLIENT_URL || true,
         credentials: true,
       },
     });

@@ -59,6 +59,7 @@ const createInMemoryRedisClient = () => {
 
 const shouldUseInMemoryRedis =
   process.env.USE_IN_MEMORY_REDIS === 'true' ||
+  !env.REDIS_URL ||
   (env.NODE_ENV === 'test' && process.env.USE_IN_MEMORY_REDIS !== 'false');
 
 export const redisClient = shouldUseInMemoryRedis

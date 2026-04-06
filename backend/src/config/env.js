@@ -10,7 +10,7 @@ const schema = Joi.object({
   CORS_ORIGIN: Joi.string().allow('').optional(),
   MONGODB_URI: Joi.string().required(),
   REDIS_URL: Joi.string().allow('').optional(),
-  USE_IN_MEMORY_REDIS: Joi.boolean().truthy('true').falsy('false').default(false),
+  USE_IN_MEMORY_REDIS: Joi.boolean().truthy('true').falsy('false').default(true),
   JWT_ACCESS_SECRET: Joi.string().min(32).required(),
   JWT_REFRESH_SECRET: Joi.string().min(32).required(),
   JWT_ACCESS_EXPIRES_IN: Joi.string().default('15m'),
@@ -30,10 +30,6 @@ const { value, error } = schema.validate(process.env, { abortEarly: false });
 
 if (error) {
   throw new Error(`Environment validation failed: ${error.message}`);
-}
-
-if (!value.USE_IN_MEMORY_REDIS && !value.REDIS_URL) {
-  throw new Error('Environment validation failed: REDIS_URL is required when USE_IN_MEMORY_REDIS is false');
 }
 
 export const env = value;
