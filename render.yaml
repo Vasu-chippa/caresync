@@ -1,37 +1,53 @@
 services:
   - type: web
-    name: hms-backend
+    name: caresyncr-backend
     env: node
     rootDir: backend
-    buildCommand: npm ci
+    buildCommand: npm install && npm run build
     startCommand: npm start
     healthCheckPath: /api/v1/health
+    healthCheckInterval: 30
+    autoDeploy: true
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 5000
+      
+      # Frontend URL (update with your Netlify domain)
       - key: CLIENT_URL
-        value: https://your-netlify-site.netlify.app
+        value: https://yourdomain.netlify.app
+      - key: CORS_ORIGIN
+        value: https://yourdomain.netlify.app
+      
+      # Database & Cache (add values in Render dashboard)
       - key: MONGODB_URI
         sync: false
       - key: REDIS_URL
         sync: false
-      - key: JWT_ACCESS_SECRET
+      
+      # JWT Secrets (add values in Render dashboard)
+      - key: JWT_SECRET
         sync: false
-      - key: JWT_REFRESH_SECRET
+      
+      # SendGrid Email Service
+      - key: SENDGRID_API_KEY
         sync: false
-      - key: JWT_ACCESS_EXPIRES_IN
-        value: 15m
-      - key: JWT_REFRESH_EXPIRES_IN
-        value: 7d
-      - key: SMTP_HOST
-        sync: false
-      - key: SMTP_PORT
-        value: 587
-      - key: SMTP_USER
-        sync: false
-      - key: SMTP_PASS
-        sync: false
-      - key: SMTP_FROM
-        sync: false
+      - key: SENDGRID_FROM_EMAIL
+        value: noreply@caresyncr.com
+      
+      # Business Configuration
+      - key: PLATFORM_COMMISSION_RATE
+        value: "0.1"
+      - key: DOCTOR_FEES_MULTIPLIER
+        value: "1.0"
+      - key: MAX_APPOINTMENT_SLOTS_PER_DAY
+        value: "20"
+      - key: APPOINTMENT_SLOT_DURATION_MINUTES
+        value: "30"
+      
+      # Logging
+      - key: LOG_LEVEL
+        value: info
+      - key: LOG_FORMAT
+        value: json

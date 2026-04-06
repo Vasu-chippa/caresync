@@ -6,8 +6,10 @@
   "scripts": {
     "test": "node --test src/tests/unit/*.test.js",
     "test:integration": "node --test src/tests/integration/*.test.js",
+    "seed:admin": "node src/scripts/seedAdmin.js",
     "seed:core": "node src/scripts/seedCoreUsers.js",
     "dev": "nodemon src/server.js",
+    "build": "echo 'Backend build completed - Node.js modules ready'",
     "start": "node src/server.js",
     "lint": "eslint src"
   },
