@@ -1,7 +1,6 @@
-import cors from 'cors';
 import { env } from './env.js';
 
-const normalizeOrigin = (origin) => origin.replace(/\/$/, '').trim();
+const normalizeOrigin = (origin = '') => origin.replace(/\/$/, '').trim();
 
 const configuredOrigins = [env.CORS_ORIGIN, env.CLIENT_URL]
   .filter(Boolean)
@@ -10,24 +9,43 @@ const configuredOrigins = [env.CORS_ORIGIN, env.CLIENT_URL]
   .filter((origin) => !origin.includes('yourdomain.netlify.app'))
   .filter(Boolean);
 
-const allowsNetlifyOrigin =
-  configuredOrigins.length === 0 || configuredOrigins.some((origin) => origin.endsWith('.netlify.app'));
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true;
+  const normalized = normalizeOrigin(origin);
 
-export const corsMiddleware = cors({
-  origin: configuredOrigins.length
-    ? (requestOrigin, callback) => {
-        if (!requestOrigin) {
-          return callback(null, true);
-        }
+  if (configuredOrigins.includes(normalized)) {
+    return true;
+  }
 
-        const normalizedRequestOrigin = normalizeOrigin(requestOrigin);
-        const isAllowedNetlifyOrigin = allowsNetlifyOrigin && normalizedRequestOrigin.endsWith('.netlify.app');
+  // Allow Netlify domains for this deployment flow.
+  if (normalized.endsWith('.netlify.app')) {
+    return true;
+  }
 
-        if (configuredOrigins.includes(normalizedRequestOrigin) || isAllowedNetlifyOrigin) {
-          return callback(null, true);
-        }
-        return callback(new Error('Not allowed by CORS'));
-      }
-    : true,
-  credentials: true,
-});
+  // Allow localhost during development.
+  if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(normalized)) {
+    return true;
+  }
+
+  return configuredOrigins.length === 0;
+};
+
+export const corsMiddleware = (req, res, next) => {
+  const requestOrigin = req.headers.origin;
+
+  if (isAllowedOrigin(requestOrigin)) {
+    if (requestOrigin) {
+      res.header('Access-Control-Allow-Origin', requestOrigin);
+    }
+    res.header('Vary', 'Origin');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  }
+
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+
+  return next();
+};
