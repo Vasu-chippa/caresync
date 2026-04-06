@@ -3,7 +3,7 @@ services:
     name: caresyncr-backend
     env: node
     rootDir: backend
-    buildCommand: npm install && npm run build
+    buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /api/v1/health
     healthCheckInterval: 30
@@ -17,37 +17,35 @@ services:
       # Frontend URL (update with your Netlify domain)
       - key: CLIENT_URL
         value: https://yourdomain.netlify.app
-      - key: CORS_ORIGIN
-        value: https://yourdomain.netlify.app
+      - key: USE_IN_MEMORY_REDIS
+        value: "true"
       
-      # Database & Cache (add values in Render dashboard)
+      # Database (add values in Render dashboard)
       - key: MONGODB_URI
-        sync: false
-      - key: REDIS_URL
         sync: false
       
       # JWT Secrets (add values in Render dashboard)
-      - key: JWT_SECRET
+      - key: JWT_ACCESS_SECRET
+        sync: false
+      - key: JWT_REFRESH_SECRET
         sync: false
       
-      # SendGrid Email Service
-      - key: SENDGRID_API_KEY
+      # SMTP Email Service
+      - key: SMTP_HOST
         sync: false
-      - key: SENDGRID_FROM_EMAIL
-        value: noreply@caresyncr.com
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: SMTP_FROM
+        sync: false
       
       # Business Configuration
-      - key: PLATFORM_COMMISSION_RATE
-        value: "0.1"
-      - key: DOCTOR_FEES_MULTIPLIER
-        value: "1.0"
-      - key: MAX_APPOINTMENT_SLOTS_PER_DAY
-        value: "20"
-      - key: APPOINTMENT_SLOT_DURATION_MINUTES
-        value: "30"
+      - key: ANALYTICS_CACHE_TTL_SECONDS
+        value: "600"
       
       # Logging
       - key: LOG_LEVEL
         value: info
-      - key: LOG_FORMAT
-        value: json
