@@ -6,7 +6,8 @@ dotenv.config();
 const schema = Joi.object({
   NODE_ENV: Joi.string().valid('development', 'test', 'production').default('development'),
   PORT: Joi.number().default(5000),
-  CLIENT_URL: Joi.string().uri().required(),
+  CLIENT_URL: Joi.string().uri().allow('').optional(),
+  CORS_ORIGIN: Joi.string().allow('').optional(),
   MONGODB_URI: Joi.string().required(),
   REDIS_URL: Joi.string().allow('').optional(),
   USE_IN_MEMORY_REDIS: Joi.boolean().truthy('true').falsy('false').default(false),
