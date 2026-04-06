@@ -26,17 +26,7 @@ app.use(sanitizeInputMiddleware);
 app.use('/api/v1', apiRateLimiter);
 app.use('/uploads', express.static(path.resolve(process.cwd(), 'uploads')));
 
-// Serve frontend static files in production
-const frontendDistPath = path.resolve(process.cwd(), 'frontend', 'dist');
-app.use(express.static(frontendDistPath));
-
 app.use('/api/v1', router);
-
-// SPA fallback: serve index.html for all non-API routes
-app.get('*', (req, res) => {
-  const indexPath = path.join(frontendDistPath, 'index.html');
-  res.sendFile(indexPath);
-});
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);
